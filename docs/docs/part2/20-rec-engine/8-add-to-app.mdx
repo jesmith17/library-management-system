@@ -1,0 +1,97 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 👐 Add Recommendation Engine to App
+
+Based on what we have learned so far, lets add a recommendation engine to the Book View page.  This will look for other books in the library that are similar to the current book.
+
+## Configuring the semantic search
+
+Open up the code from the server [file](https://github.com/mongodb-developer/library-management-system/blob/main/server/src/controllers/books.ts) `server/src/controllers/books.ts` once more, and edit the `findSimilarBooks` method to query your data for semantic search.
+
+
+<details>
+<summary>Answer</summary>
+<div>
+
+```js
+    public async findSimilarBooks(id: string): Promise<Book[]> {
+        // Retrieve the existing book from the DB and get it's embeddings.
+        const book = await collections?.books?.findOne({_id: id});
+
+        // Create a new aggregation pipeline and pass in the existing embeddings
+        const aggregationPipeline = [
+            {
+                $vectorSearch: {
+                queryVector:  book.embeddings,
+                path: 'embeddings',
+                numCandidates: 100,
+                index: 'vectorsearch',
+                limit: 10,
+                }
+            }
+        ];
+        const books = await collections?.books?.aggregate(aggregationPipeline).toArray() as Book[];
+        return books;
+    }
+
+```
+</div>
+</details>
+
+
+:::note
+
+The `serverlessEmbeddings` is using the books image as the field it generates embeddings off of. So a semantic search will look for books with a similar cover.  To change this behavior use the tips shown in the [Create Vectors](part2/vector-search/create-vectors) to
+customize the field that is being used for the embeddings.
+
+:::
+
+
+
+## Add filtering
+
+Notice that when viewing the results, the first book in the list is the same book already selected. This is because by default Atlas Search queries are sorted in order of score descending. So the best match will be the first entry returned.
+Because the book is compared to it's own vectors, it's the best match.  Lets update our query to filter out 2 conditions
+
+- Exact match for the same book (based on id value)
+- Books with available counts equal to 0
+
+<details>
+    <summary>Answer</summary>
+    <div>
+
+        ```ts
+        public async findSimilarBooks(id: string): Promise<Book[]> {
+        // Retrieve the existing book from the DB and get it's embeddings.
+            const book = await collections?.books?.findOne({_id: id});
+
+            // Create a new aggregation pipeline and pass in the existing embeddings
+            const aggregationPipeline = [
+                {
+                    $vectorSearch: {
+                        queryVector:  book.embeddings,
+                        path: 'embeddings',
+                        numCandidates: 100,
+                        index: 'vectorsearch',
+                        limit: 10,
+                        filter: {
+                            $and: [
+                                { _id: {$ne: id }},
+                                { available: { $gt: 0 } }
+                            ]
+                        }
+                    }
+                }
+            ];
+            const books = await collections?.books?.aggregate(aggregationPipeline).toArray() as Book[];
+            return books;
+        }
+
+        ```
+    </div>
+</details>
+
+
+
+

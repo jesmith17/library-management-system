@@ -4,6 +4,8 @@ import { BookService } from '../book.service';
 import { BookView } from '../models/book-view';
 import { Reservation } from '../models/reservation';
 import { ReservationService } from '../reservation.service';
+import {Observable} from "rxjs";
+import {Book} from "../models/book";
 
 @Component({
   selector: 'lms-book',
@@ -12,6 +14,7 @@ import { ReservationService } from '../reservation.service';
 })
 export class BookComponent implements OnInit {
   book: BookView;
+  similarBooks: Observable<BookView[]>;
   reservation: Reservation | undefined;
 
   constructor(
@@ -25,6 +28,7 @@ export class BookComponent implements OnInit {
       ({ book, reservations }) => {
         this.book = book;
         this.setUserReservation(reservations);
+        this.getSimilarBooks();
       });
   }
 
@@ -49,6 +53,10 @@ export class BookComponent implements OnInit {
 
   setUserReservation(reservations: Reservation[]) {
     this.reservation = reservations.find(r => r.book._id === this.book.isbn);
+  }
+
+  getSimilarBooks() {
+      this.similarBooks = this.bookService.similar(this.book.isbn);
   }
 
   refetchBook() {

@@ -1,0 +1,60 @@
+# 👐 Update Reservations
+
+One of the key features of the Library system is te ability to reserve books. When a given book is reserved, we need to make sure the inventory count for that book is updated so that we don't allow too many
+reservations.
+
+Lets spend some time updating the books `inventory` attribute to support that requirement.
+
+Open the `server/src/controllers/books.ts` file, and look for the `updateBookInventory` method. What code do we need to add to make this method correct?
+
+Lets review the options that exist.
+
+MongoDB offers 3 options to update a document
+- updateOne - Updates a single record based on the matching criteria provided
+- updateMany - Updates all documents that match provided criteria
+- replaceOne - Replaces a single document with the provided data based on match criteria
+
+:::tip
+Details for these oeprators can be found [Update Documents](https://www.mongodb.com/docs/drivers/node/current/crud/update/)
+:::
+
+Both of these methods take 2 documents as their input params.
+
+```
+db.collection.updateOne({ ... matching criteria ...}, { ... commands for updates to apply ...});
+```
+
+Using this guidance, lets update the above method with the correct context to adjust the `available` attribute to reflect that a copy has been reserved.
+
+:::caution
+Use `replace` carefully as it can create problems, especially in highly concurrent systems.
+:::
+
+
+
+<details>
+  <summary>Click here to see the answer</summary>
+
+<div>
+
+```ts
+    private updateBookInventory(bookId: string, count: number): Promise<UpdateResult> {
+        const result = collections?.books?.updateOne(
+            { _id: bookId },
+            { $inc: { available: count } }
+        );
+        return result;
+    }
+
+```
+
+    Notice that the code is using the `$inc` operator to increment the `available` attribute by the amount provided.
+</div>
+</details>
+
+
+
+:::tip
+Mongo does not offer a decrement operator, but passing a negative value produces the same effect.
+To learn more about the update operators available, view <Link to="https://www.mongodb.com/docs/manual/reference/operator/update/">Update Operators</Link>
+:::

@@ -1,0 +1,8 @@
+{
+    "label": "Vector Search",
+    "position": 10,
+    "link": {
+        "type": "doc",
+        "id": "semantic-search"
+    }
+}

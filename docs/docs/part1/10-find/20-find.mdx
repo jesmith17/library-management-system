@@ -1,0 +1,100 @@
+# 👐 Get Books
+
+
+Lets implement the `getBooks()` function to return a list of books in the catalog.
+
+Open the `server/src/controllers/books.ts` file, and look for the `getBook` method. Currently the method is hard coded to return an empty []. Lets implement the code needed to make this return a list of books.
+
+:::tip
+Helpers have been added, via `src/database.ts` file to make it easy to reference the DB and the Collection, In this case it would be
+` collections?.books?` which will give you a reference to the Books Collection and allow you make Query API calls.
+
+:::
+
+<details>
+  <summary>Click here to see the answer</summary>
+
+<div>
+
+```ts
+    public async getBooks(limit: number = 12, skip: number = 0): Promise<Book[]> {
+
+    const books = await collections?.books?.find({}).toArray();
+
+    return books;
+}
+
+```
+</div>
+</details>
+
+Notice that the method signature includes parameters for limit and skip, common fields to support pagination of records.  Lets look at what changes we would need to make to take advantage of these fields.
+
+Look here to see documentation on how to [Specify Documents to Return](https://www.mongodb.com/docs/drivers/node/current/crud/query/specify-documents-to-return/) in MongoDB.
+
+:::tip
+MongoDB has a query API, not a query Language. Thinking of the query operators in the same way as you would method calls can help make the query API easier to understand.
+:::
+
+
+To complete our query we need to specifically look at the `.limit()` and `.skip()` operators.
+
+<details>
+    <summary>Click here to see the answer</summary>
+
+    <div>
+
+        ```ts
+        public async getBooks(limit: number = 12, skip: number = 0): Promise<Book[]> {
+            if (limit > 100) {
+                limit = 100;
+            }
+
+            const bookCursor = await collections?.books?.find({});
+            const books = await bookCursor.limit(limit).skip(skip).toArray();
+
+            return books;
+        }
+        ```
+    </div>
+</details>
+
+
+By adding the `.limit()` and `.skip()` operator calls to the chain we can implement pagination in a reasonable way.
+
+
+Refresh the page again, and notice which books are coming up. Does that match the order you would have expected in a library?  Does this seem intuitive to the end user?
+
+Lets make 1 more update to our code and implement the `.sort()` method using the `title` attribute in ascending order.
+
+:::tip
+    In mongoDB we represent ascending order with the value of `1` and descending order with `-1`
+:::
+
+Update the code one more time to implement the sort, and refresh the app to check your results.
+
+<details>
+    <summary>Click here to see the answer</summary>
+
+    <div>
+
+        ```ts
+        public async getBooks(limit: number = 12, skip: number = 0): Promise<Book[]> {
+            if (limit > 100) {
+                limit = 100;
+            }
+
+            const bookCursor = await collections?.books?.find({});
+            const books = await bookCursor.sort({'title': 1}).limit(limit).skip(skip).toArray();
+
+            return books;
+        }
+        ```
+    </div>
+</details>
+
+
+
+
+
+

@@ -1,0 +1,8 @@
+{
+    "label": "Lab 1: MongoDB Basics & Search",
+    "position": 3,
+    "link": {
+        "type": "doc",
+        "id": 'intro'
+    }
+}

@@ -1,4 +1,5 @@
-import { collections } from '../database.js';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { collections, clients } from '../database.js';
 import { Review } from '../models/review.js';
 import { ObjectId, InsertOneResult, UpdateResult } from 'mongodb';
 
@@ -22,6 +23,8 @@ class ReviewsController {
 
     // Create a new review
     public async createReview(bookId: string, reviewBody: { text: string; rating: number; }, userName: string): Promise<{ insertResult: InsertOneResult, updateResult: UpdateResult }> {
+        let insertResult: InsertOneResult;
+        let updateResult: UpdateResult;
         const review = {
             _id: null,
             text: reviewBody?.text,
@@ -31,21 +34,22 @@ class ReviewsController {
             bookId
         } as Review;
 
-        const insertResult = await collections?.reviews?.insertOne(review);
+        // eslint-disable-next-line prefer-const
+        insertResult = await collections?.reviews?.insertOne(review);
 
         review._id = insertResult?.insertedId;
         delete review.bookId;
 
-        const updateResult = await collections?.books?.updateOne({ _id: bookId }, {
+        // eslint-disable-next-line prefer-const
+        updateResult = await collections?.books?.updateOne({_id: bookId}, {
             $push: {
                 reviews: {
-                    $each: [ review ],
-                    $sort: { timestamp: -1 },
+                    $each: [review],
+                    $sort: {timestamp: -1},
                     $slice: 5
                 }
             }
         });
-
         return { insertResult, updateResult };
     }
 

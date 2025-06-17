@@ -1,0 +1,69 @@
+# 👐 Understanding Transactions
+
+One of the most critical things a DB can do is keep data accurate. In most systems this is done by managing the ACID properties of data changes (Atomic, Consistent, Isolated, Durable).
+
+Open the `server/src/controllers/reivews.ts` file, and look for the `createReview()` method.
+
+Notice that the `createReview()` method is doing 2 different operations inside the method
+
+- Inserting a new `Review` document in to the `reviews` collection
+- Adding that most recent review to the `book` document to add with fast retrieval (We review this in the previous section)
+
+But what happens to the `review` that gest inserted if the update to the `books`collection fails?
+
+Lets implement a `transaction` to ensure that these entries are done in an Atomic fashion
+
+
+<details>
+  <summary>Click here to see the answer</summary>
+
+<div>
+
+```ts showLineNumbers
+    public async createReview(bookId: string, reviewBody: { text: string; rating: number; }, userName: string): Promise<{ insertResult: InsertOneResult, updateResult: UpdateResult }> {
+        const session = clients?.client.startSession();
+        let insertResult: InsertOneResult;
+        let updateResult: UpdateResult;
+        try {
+            session.startTransaction()
+            const review = {
+                _id: null,
+                text: reviewBody?.text,
+                name: userName,
+                rating: reviewBody?.rating,
+                timestamp: (new Date()).getTime(),
+                bookId
+            } as Review;
+
+            insertResult = await collections?.reviews?.insertOne(review);
+
+            review._id = insertResult?.insertedId;
+            delete review.bookId;
+
+            updateResult = await collections?.books?.updateOne({_id: bookId}, {
+                $push: {
+                    reviews: {
+                        $each: [review],
+                        $sort: {timestamp: -1},
+                        $slice: 5
+                    }
+                }
+            });
+            await session.commitTransaction();
+        } catch (err) {
+            await session.abortTransaction();
+        } finally {
+            await session.endSession();
+        }
+        return { insertResult, updateResult };`
+    }
+
+```
+</div>
+
+:::tip
+
+    Pay special attention to the code at lines 2-6 & 30-35 as those lines contain the changes needed to make this code transcational
+:::
+
+</details>

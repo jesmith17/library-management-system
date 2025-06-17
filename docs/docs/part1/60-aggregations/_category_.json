@@ -1,0 +1,8 @@
+{
+  "label": "Aggregation pipelines",
+  "position": 60,
+  "link": {
+    "type": "doc",
+    "id": "search-stage"
+  }
+}

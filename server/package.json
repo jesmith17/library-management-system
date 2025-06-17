@@ -19,12 +19,15 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/aiplatform": "^3.4.0",
+    "@langchain/community": "^0.3.45",
+    "@langchain/core": "^0.3.57",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-jwt": "^8.4.1",
     "jsonwebtoken": "^9.0.1",
     "mongodb": "^5.7.0",
+    "node-llama-cpp": "^3.9.0",
     "openai": "^4.10.0"
   },
   "devDependencies": {

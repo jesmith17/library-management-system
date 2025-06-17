@@ -1,0 +1,58 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# 👐 Add Semantic Search to Your Application
+
+You now know everything you need to add vector search capabilities to your application.
+
+## Configuring the environment variables
+
+In your `server/.env` [file](https://github.com/mongodb-developer/library-management-system/blob/main/server/.env), you'll find a few variables that you can use to configure the application. Add a couple more at the end of the file to configure the embeddings source and the API key.
+
+```json
+EMBEDDINGS_SOURCE=serverlessEndpoint
+
+```
+
+## Configuring the vector search query
+
+Open up the code from the server [file](https://github.com/mongodb-developer/library-management-system/blob/main/server/src/controllers/books.ts) `server/src/controllers/books.ts` once more, and edit the `searchBooks` method to query your data for semantic search.
+
+:::tip
+Use the `getEmbeddings` function to convert the query into a vector.
+:::
+
+<details>
+<summary>Answer</summary>
+<div>
+
+```js
+public async searchBooks(query: string): Promise<Book[]> {
+  const vector = await getEmbeddings(query);
+  const aggregationPipeline = [
+    {
+      $vectorSearch: {
+        queryVector:  vector,
+        path: 'embeddings',
+        numCandidates: 100,
+        index: 'vectorsearch',
+        limit: 10,
+      }
+    }
+  ];
+  const books = await collections?.books?.aggregate(aggregationPipeline).toArray() as Book[];
+  return books;
+}
+
+```
+</div>
+</details>
+
+## Testing the semantic search
+
+To test the semantic search in the app, try to search for some books but use different words that have a similar meaning or are related to the book's cover.
+
+You can use the following queries:
+- Canines doing stuff
+- Fluffy animals
+- European history

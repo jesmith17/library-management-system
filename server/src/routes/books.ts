@@ -28,6 +28,18 @@ books.get('/search', async (req, res) => {
     return res.json(books);
 });
 
+books.get('/similar', async (req, res) => {
+    const isbn = (req?.query?.isbn as string) || undefined;
+
+    if (!isbn) {
+        return res.status(400).send({message: 'missing isbn'});
+    }
+
+    const books = await bookController.findSimilarBooks(isbn);
+
+    return res.json(books);
+});
+
 books.post('/', protectedRoute, adminRoute, async (req: AuthRequest, res) => {
     const book = req?.body;
 

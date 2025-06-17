@@ -1,0 +1,12 @@
+# 📘 Intro
+
+If you followed this session in person with the MongoDB team, you see that we have made a number of updates to the app to support various queries of data, as well as some introductions to updates. In this next section we will review
+ how to implement transactions in MongoDB to ensure that when multiple documents are updated at the same time, you get ACID behavior/
+
+Single document updates in MongoDB are ALWAYS atomic, so we haven't needed to worry about transactions until now.
+
+MongoDB supports ACID transactions across
+- multi-document
+- multi-collection
+- multi-database
+- multi-shards

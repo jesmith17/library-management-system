@@ -43,6 +43,7 @@
     }
 }
 
+
 .book-details-content, .book-reviews, .write-review {
     padding: 6rem 5rem 3rem 5rem;
     max-width: 1400px;
@@ -60,6 +61,74 @@
     gap: 2rem;
     margin: -5rem auto 5rem auto;
 }
+
+.book-recs {
+  margin: 15px auto;
+  max-width: 1400px;
+  max-height: 850px;
+  display:flex;
+  flex-direction: column;
+  padding: 6rem 5rem 3rem 5rem;
+}
+
+.book-recs-content {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .book-authors {
+    font-size: 14px;
+    color: styles.$dark-primary-text;
+    margin-top: 7px;
+    a {
+      color: styles.$dark-primary-text;
+    }
+  }
+
+  .book-card {
+    width: 300px;
+    height: 450px;
+    margin: 0 50px 30px 0;
+  }
+
+  .book-description {
+    max-height: 30px;
+  }
+
+  .book-title {
+    overflow: hidden;
+    line-height: 26px;
+    font-size: 16px;
+    max-height: 55px;
+
+    a {
+      color: styles.$dark-text;
+      text-decoration: none;
+    }
+  }
+
+  .book-thumbnail {
+    margin: 10px auto;
+    box-shadow: -5px 10px 15px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 2px;
+    width: 128px;
+    height: 216px;
+  }
+
+  .book-card-header {
+    margin-bottom: 1rem;
+  }
+
+  .book-card-title {
+    display: flex;
+    flex-direction: column;
+  }
+
+}
+
+
+
 
 .book-card-header, .book-card-content {
     display: flex;
@@ -147,7 +216,14 @@
         flex-direction: column;
     }
 
-    .book-card-header, .book-card-content {
+    .book-recs-content {
+      margin: -25rem auto 5rem auto;
+      padding: 27rem 3rem 3rem 3rem;
+      flex-direction: row;
+    }
+
+
+  .book-card-header, .book-card-content {
         flex-direction: column;
     }
 
@@ -182,6 +258,12 @@
         font-size: 16px;
         line-height: 20px;
         margin-top: 15px;
+    }
+
+    .book-authors-sm {
+      font-size: 12px;
+      line-height: 16px;
+      margin-top: 7px;
     }
 
     .reservation-wrapper {

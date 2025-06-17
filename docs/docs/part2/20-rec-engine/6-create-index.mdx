@@ -1,0 +1,27 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import Screenshot from "@site/src/components/Screenshot";
+
+# 👐 Update Vector Search Indexes
+
+In order to use filters with your Vector Search index, we need to update the index to include filter fields.
+
+## Step-by-step guide to updating your Vector Search index
+
+Open the **Clusters** page in MongoDB Atlas and select **Atlas Search** tab in the tab list
+
+Search for the **vectorsearch** index created earlier.
+
+<Screenshot src="img/search-vector-index.png" alt="The list of Atlas Search indexes with vectorsearch index in the search box" url="https://cloud.mongodb.com" />
+
+Use the ***action*** button (marked by 3 elipsis) to select **Edit with Visual Editor**
+
+<Screenshot src="img/add-filter-fields-search-index.png" alt="Search index visual editor pages" url="https://cloud.mongodb.com" />
+
+In the bottom section marked **Filter Field** select the `_id` value.
+
+Then click the button for **Add Another Filter Field** and select the `available` attribute.
+
+This enables you to add `filter` commands to your vector search query.
+
+

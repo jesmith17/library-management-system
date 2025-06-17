@@ -22,15 +22,9 @@ class BookController {
         DELETED: 'Book deleted'
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public async getBooks(limit: number = 12, skip: number = 0): Promise<Book[]> {
-        if (limit > 100) {
-            limit = 100;
-        }
-
-        const bookCursor = collections?.books?.find({});
-        const books = await bookCursor.limit(limit).skip(skip).toArray();
-
-        return books;
+        return [];
     }
 
     public async getBook(bookId: string): Promise<Book> {
@@ -92,6 +86,12 @@ class BookController {
             }).limit(25).toArray();
         return books;
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public async findSimilarBooks(id: string): Promise<Book[]> {
+        return Promise.resolve([] as Book[]);
+    }
+
 
     public async createBook(book: Book): Promise<InsertOneResult> {
         const result = await collections?.books?.insertOne(book);

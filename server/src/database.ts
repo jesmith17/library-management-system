@@ -4,6 +4,7 @@ import { IssueDetail } from './models/issue-detail';
 import { Author } from './models/author';
 import { Review } from './models/review';
 import { User } from './models/user';
+import {MongoClient} from 'mongodb';
 
 export const collections: {
     books?: mongodb.Collection<Book>;
@@ -12,6 +13,11 @@ export const collections: {
     users?: mongodb.Collection<User>;
     issueDetails?: mongodb.Collection<IssueDetail>;
 } = {};
+
+export const clients:  {
+    client?: MongoClient
+} = {};
+
 
 export const databases: {
     library?: mongodb.Db;
@@ -49,6 +55,8 @@ export async function connectToDatabase(uri?: string) {
     collections.reviews = reviewsCollection;
     collections.users = usersCollection;
     collections.issueDetails = issueDetailCollection;
+
+    clients.client = client;
 
     return client;
 }
