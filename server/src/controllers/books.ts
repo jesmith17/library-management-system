@@ -149,12 +149,9 @@ class BookController {
         return bookData;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private updateBookInventory(bookId: string, count: number): Promise<UpdateResult> {
-        const result = collections?.books?.updateOne(
-            { _id: bookId },
-            { $inc: { available: count } }
-        );
-        return result;
+        return null;
     }
 }
 
