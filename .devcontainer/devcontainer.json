@@ -4,8 +4,8 @@
   "updateContentCommand": "/bin/bash .devcontainer/updateContent.sh",
   "postCreateCommand": "",
   "postAttachCommand": {
-    "server": "cd server && npm start",
-    "client": "export NG_CLI_ANALYTICS=\"false\"; cd client && npm start",
+    "server": "cd server && npm install && npm start",
+    "client": "export NG_CLI_ANALYTICS=\"false\"; cd client && npm install && npm start",
     "portSetup": "/bin/bash .devcontainer/portSetup.sh"
   },
   "customizations": {
